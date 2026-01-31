@@ -37,3 +37,7 @@ memory/
 # Compressed archives
 *.tar.gz
 *.zip
+-e 
+# Environment files
+*.env
+*.env.*
