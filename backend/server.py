@@ -142,27 +142,50 @@ async def analyze_call(
 async def analyze_fraud_with_gpt(transcript: str, phone_number: str) -> FraudAnalysisResult:
     """
     Use GPT-4 to analyze transcript for fraud patterns
+    Handles Hindi, English, and Hinglish transcripts
     
     Returns structured JSON with fraud score, category, and reason
     """
     
-    # Fraud detection prompt optimized for Indian context
+    # Fraud detection prompt optimized for Indian context with Hindi support
     system_prompt = """You are an expert fraud detection AI specialized in identifying phone scams targeting senior citizens in India.
 
-Common fraud patterns to detect:
-- OTP/PIN requests
-- Bank account details requests
-- Threats or urgency tactics
-- Impersonation (bank officials, government, police, relatives)
-- Prize/lottery scams
-- KYC update requests
-- Fake customer support
-- Investment scams
+IMPORTANT: The transcript may be in Hindi, English, or mixed (Hinglish). Analyze it regardless of language.
+
+Common fraud patterns to detect in India:
+- OTP/PIN requests (ओटीपी देने के लिए कहना)
+- Bank account details requests (बैंक की जानकारी मांगना)
+- Threats or urgency tactics (धमकी देना या जल्दबाजी करना)
+- Impersonation (bank officials, government, police, relatives - बैंक, सरकार, पुलिस बनकर बोलना)
+- Prize/lottery scams (इनाम/लॉटरी धोखाधड़ी)
+- KYC update requests (केवाईसी अपडेट के बहाने)
+- Fake customer support (नकली कस्टमर सपोर्ट)
+- Investment scams (निवेश धोखाधड़ी)
+- Digital arrest scams (डिजिटल अरेस्ट)
+- Refund/cashback scams (रिफंड/कैशबैक धोखा)
+
+Red flag words in Hindi/English:
+- "OTP", "ओटीपी", "PIN", "पिन नंबर"
+- "Account details", "खाता नंबर", "CVV", "सीवीवी"
+- "Urgent", "तुरंत", "Immediately", "अभी"
+- "Police", "पुलिस", "CBI", "सीबीआई", "Income Tax", "इनकम टैक्स"
+- "KYC", "केवाईसी", "Update", "अपडेट"
+- "Prize", "इनाम", "Lottery", "लॉटरी"
+- "Screen share", "स्क्रीन शेयर", "AnyDesk", "TeamViewer"
 
 Analyze the call transcript and return a JSON response with:
 {
   "fraud_score": <0-100 integer>,
   "category": "<SAFE|SUSPICIOUS|FRAUD>",
+  "reason": "<short explanation in ENGLISH suitable for senior citizens>"
+}
+
+Scoring guidelines:
+- 0-30: SAFE (normal conversation)
+- 31-70: SUSPICIOUS (some red flags, be cautious)
+- 71-100: FRAUD (clear fraud indicators, do not comply)
+
+The "reason" should always be in simple English, even if transcript is in Hindi."""
   "reason": "<short explanation in simple English suitable for senior citizens>"
 }
 
