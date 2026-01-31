@@ -91,14 +91,19 @@ async def analyze_call(
             temp_file_path = temp_file.name
         
         # Step 1: Transcribe audio using Whisper
+        # Whisper supports Hindi (hi) and mixed Hindi-English (Hinglish)
         logging.info(f"Transcribing audio for {phone_number}")
         
         with open(temp_file_path, "rb") as audio_file:
+            # Using auto-detect (None) for best results with mixed Hindi-English
+            # Whisper's multilingual model handles Hindi very well
+            # Prompt helps Whisper understand context and improve Hindi accuracy
             transcription_response = await stt_service.transcribe(
                 file=audio_file,
                 model="whisper-1",
                 response_format="text",
-                language=None  # Auto-detect (Hindi or English)
+                language=None,  # Auto-detect Hindi/English/Hinglish
+                prompt="यह एक फोन कॉल रिकॉर्डिंग है। This is a phone call recording with Hindi and English conversation."  # Helps with Hindi vocabulary
             )
         
         transcript = transcription_response.text
