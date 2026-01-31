@@ -186,13 +186,6 @@ Scoring guidelines:
 - 71-100: FRAUD (clear fraud indicators, do not comply)
 
 The "reason" should always be in simple English, even if transcript is in Hindi."""
-  "reason": "<short explanation in simple English suitable for senior citizens>"
-}
-
-Scoring guidelines:
-- 0-30: SAFE (normal conversation)
-- 31-70: SUSPICIOUS (some red flags, be cautious)
-- 71-100: FRAUD (clear fraud indicators, do not comply)"""
 
     user_prompt = f"""Analyze this phone call transcript:
 
